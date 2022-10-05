@@ -132,7 +132,7 @@ if __name__ == "__main__":
     print(csv_file)
     parser = argparse.ArgumentParser()
     parser.add_argument("-r", "--record", help="record file path", nargs="?")
-    parser.add_argument("-n", "--number", type=int, help="require number")
+    parser.add_argument("-n", "--number", type=int, help="required number")
     parser.parse_args()
     record_file = parser.parse_args().record
     required_number = parser.parse_args().number
@@ -140,7 +140,6 @@ if __name__ == "__main__":
         update_cnt(record_file, csv_file)
     if required_number:
         people = surprise(required_number, csv_file)
-        for person in people:
-            print(person.get_name())
+        print(people)
     else:
         print("Please input require number")
