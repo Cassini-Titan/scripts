@@ -57,7 +57,7 @@ def write_cnt(csv_file: str, people: list) -> None:
             f_csv.writerow(person.get_person())
 
 
-def read_record_from_excel(excel_file: str) -> list:
+def read_record_from_excel(excel_file: str) -> typing.List:
     df = pd.read_excel(excel_file, usecols="A", sheet_name="Sheet1")
     return df["Record"].tolist()
 
@@ -83,7 +83,7 @@ def get_same_count_number(people: list, base_index: int) -> int:
     return cnt - base_index
 
 
-def sort(csv_file: str) -> list:
+def sort(csv_file: str) -> typing.List:
     people = read_cnt(csv_file)
     sorted_by_count = sorted(people, key=lambda x: x.get_count())
     sorted_people = []
