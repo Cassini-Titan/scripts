@@ -58,7 +58,7 @@ def write_cnt(csv_file: str, people: list) -> None:
 
 
 def read_record_from_excel(excel_file: str) -> list:
-    df = pd.read_excel(excel_file, usecols="A")
+    df = pd.read_excel(excel_file, usecols="A", sheet_name="Sheet1")
     return df["Record"].tolist()
 
 
