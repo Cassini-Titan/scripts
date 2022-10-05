@@ -136,7 +136,6 @@ if __name__ == "__main__":
     parser.parse_args()
     record_file = parser.parse_args().record
     required_number = parser.parse_args().number
-    required_number = 10
     if record_file:
         update_cnt(record_file, csv_file)
     if required_number:
