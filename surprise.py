@@ -131,12 +131,13 @@ if __name__ == "__main__":
     csv_file = Path.absolute(Path(__file__)).parent.parent / "cnt.csv"
     print(csv_file)
     parser = argparse.ArgumentParser()
-    parser.add_argument("-r", "--record", help="record file path", nargs="?")
+    parser.add_argument("-u", "--update", type=int, help="update or not", nargs="?", default=0)
     parser.add_argument("-n", "--number", type=int, help="required number")
     parser.parse_args()
-    record_file = parser.parse_args().record
+    is_update = parser.parse_args().update == 1
     required_number = parser.parse_args().number
-    if record_file:
+    if is_update:
+        record_file = Path.absolute(Path(__file__)).parent.parent / "record.xlsx"
         update_cnt(record_file, csv_file)
     if required_number:
         people = surprise(required_number, csv_file)
