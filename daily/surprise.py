@@ -1,4 +1,5 @@
 import argparse
+import sys
 import csv
 import typing
 import time
@@ -23,10 +24,16 @@ class Person:
     def get_last_time(self) -> str:
         return self.__dict__["LastTime"]
 
-    def update(self) -> None:
+    def plus(self) -> None:
         count = int(self.get_count())
         self.__dict__["Count"] = str(count + 1)
         self.__dict__["LastTime"] = time.time()
+        print("Plus cnt for {}".format(self.get_name()))
+
+    def minus(self) -> None:
+        count = int(self.get_count())
+        self.__dict__["Count"] = str(count - 1)
+        print("Minus cnt for {}".format(self.get_name()))
 
     def __repr__(self) -> str:
         return self.get_name()
@@ -57,18 +64,31 @@ def write_cnt(csv_file: str, people: list) -> None:
             f_csv.writerow(person.get_person())
 
 
-def read_record_from_excel(excel_file: str) -> typing.List:
-    df = pd.read_excel(excel_file, usecols="A", sheet_name="Sheet1")
-    return df["Record"].tolist()
+def read_record_from_excel(excel_file: str, column: int) -> typing.List:
+    if column == None:
+        column = 1
+    col = chr(column + 64).upper()
+    df = pd.read_excel(excel_file, usecols=col, sheet_name="Sheet1")
+    return df.iloc[:, 0].tolist()
 
 
-def update_cnt(record_file: str, cnt_file: str) -> None:
+def plus_cnt(record_file: str, cnt_file: str, column: int = 1) -> None:
     people = read_cnt(cnt_file)
-    records = read_record_from_excel(record_file)
+    records = read_record_from_excel(record_file, column)
     for person in people:
         name = person.get_name()
         if name in records:
-            person.update()
+            person.plus()
+    write_cnt(cnt_file, people)
+
+
+def minus_cnt(record_file: str, cnt_file: str, column: str) -> None:
+    people = read_cnt(cnt_file)
+    records = read_record_from_excel(record_file, column)
+    for person in people:
+        name = person.get_name()
+        if name in records:
+            person.minus()
     write_cnt(cnt_file, people)
 
 
@@ -129,18 +149,24 @@ def surprise(require_number: int, csv_file: str) -> typing.List:
 
 if __name__ == "__main__":
     csv_file = Path.absolute(Path(__file__)).parent.parent.parent / "cnt.csv"
-    print(csv_file)
+    record_file = Path.absolute(Path(__file__)).parent.parent.parent / "record.xlsx"
     parser = argparse.ArgumentParser()
-    parser.add_argument("-u", "--update", type=int, help="update or not", nargs="?")
-    parser.add_argument("-n", "--number", type=int, help="required number")
-    parser.parse_args()
-    is_update = parser.parse_args()
-    required_number = parser.parse_args().number
-    if is_update != None:
-        record_file = Path.absolute(Path(__file__)).parent.parent.parent / "record.xlsx"
-        update_cnt(record_file, csv_file)
-    if required_number:
-        people = surprise(required_number, csv_file)
-        print(people)
-    else:
-        print("Please input require number")
+    parser.add_argument(
+        "-p", "--plus", type=int, help="plus which column", nargs="?"
+    )
+    parser.add_argument("-m", "--minus", type=int, help="minus which column", nargs="?")
+    parser.add_argument("-n", "--number", type=int, help="required number", nargs="?")
+    args, _ = parser.parse_known_args()
+    plus_col = args.plus
+    minus_col = args.minus
+    required_number = args.number
+    if ("-p" in sys.argv):
+        plus_cnt(record_file, csv_file, plus_col)
+    if minus_col is not None:
+        minus_cnt(record_file, csv_file, minus_col)
+    if ("-n" in sys.argv):
+        if required_number is not None:
+            print(required_number)
+            print(surprise(required_number, csv_file))
+        else:
+            print("Please input require number")
