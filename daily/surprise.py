@@ -118,7 +118,7 @@ def sort(csv_file: str) -> typing.List:
         cnt += base_number
 
     # sort by last time
-    # test
+    # test 12121212
     base_index = 0
     for fragment in fragments:
         sublist = sorted_by_count[base_index : base_index + fragment]
