@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import argparse
 import sys
 import csv
@@ -10,7 +11,7 @@ import pandas as pd
 
 class Person:
     def __init__(self, row, header) -> None:
-        self.__dict__ = dict(zip(header, row))
+        self.__dict__ = dict(zip(header, row))  
 
     def get_person(self) -> dict:
         return self.__dict__
@@ -117,6 +118,7 @@ def sort(csv_file: str) -> typing.List:
         cnt += base_number
 
     # sort by last time
+    # test
     base_index = 0
     for fragment in fragments:
         sublist = sorted_by_count[base_index : base_index + fragment]
